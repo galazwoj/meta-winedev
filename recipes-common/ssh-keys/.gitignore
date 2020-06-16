@@ -1,0 +1,3 @@
+# Prevent accidential check in of generated SSH keys
+
+files/
