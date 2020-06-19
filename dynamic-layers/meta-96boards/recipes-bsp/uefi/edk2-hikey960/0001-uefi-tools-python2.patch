@@ -1,0 +1,25 @@
+diff --git git.orig/uefi-tools/parse-platforms.py git/uefi-tools/parse-platforms.py
+index af44038..a77aab7 100755
+--- git.orig/uefi-tools/parse-platforms.py
++++ git/uefi-tools/parse-platforms.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/python
++#!/usr/bin/python2
+ 
+ import sys, os, argparse, ConfigParser
+ 
+diff --git git.orig/uefi-tools/uefi-build.sh git/uefi-tools/uefi-build.sh
+index 7fec3d0..b911619 100755
+--- git.orig/uefi-tools/uefi-build.sh
++++ git/uefi-tools/uefi-build.sh
+@@ -11,6 +11,10 @@
+ 
+ unset WORKSPACE EDK_TOOLS_DIR MAKEFLAGS
+ 
++python() { /usr/bin/python2 "$@"; }
++export -f python
++export PATH=/usr/bin/:$PATH
++
+ TOOLS_DIR="`dirname $0`"
+ export TOOLS_DIR
+ . "$TOOLS_DIR"/common-functions

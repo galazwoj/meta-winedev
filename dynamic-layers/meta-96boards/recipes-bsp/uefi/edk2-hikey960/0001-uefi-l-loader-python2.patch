@@ -1,0 +1,11 @@
+--- git.orig/l-loader/hikey960.mk	2020-06-16 21:26:14.586780916 +0200
++++ git/l-loader/hikey960.mk	2020-06-16 21:26:30.091852236 +0200
+@@ -16,7 +16,7 @@
+ 	done
+ 
+ recovery.bin: $(BL1) $(NS_BL1U)
+-	python gen_loader_hikey960.py -o $@ --img_bl1=$(BL1) --img_ns_bl1u=$(NS_BL1U)
++	/usr/bin/python2 gen_loader_hikey960.py -o $@ --img_bl1=$(BL1) --img_ns_bl1u=$(NS_BL1U)
+ 
+ .PHONY: clean
+ clean:
