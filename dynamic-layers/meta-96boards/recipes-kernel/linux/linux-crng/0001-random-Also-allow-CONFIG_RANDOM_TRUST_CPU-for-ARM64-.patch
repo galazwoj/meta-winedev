@@ -1,0 +1,36 @@
+From 46e25674ccf73b01acb30f233f0fbd02ac818b85 Mon Sep 17 00:00:00 2001
+From: Robert Michelsen <robert.michelsen@gmx.net>
+Date: Mon, 3 Dec 2018 12:50:43 +0100
+Subject: [PATCH] random: Also allow CONFIG_RANDOM_TRUST_CPU for ARM64 systems.
+
+Enables usage of random.trust_cpu on ARM64 systems which suffer
+from large delays at boot due to slow entropy gathering.
+
+Original slowness was encountered after fix for CVE-2018-1108 [1].
+The config options were implemented in [2] and [3].
+
+[1]: https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=43838a23a05fbd13e47d750d3dfd77001536dd33
+[2]: https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=39a8883a2b989d1d21bd8dd99f5557f0c5e89694
+[3]: https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=9b25436662d5fb4c66eb527ead53cab15f596ee0
+
+Signed-off-by: Robert Michelsen <robert.michelsen@gmx.net>
+---
+ drivers/char/Kconfig | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/char/Kconfig b/drivers/char/Kconfig
+index 9d03b2ff5df6..acefc5d88578 100644
+--- a/drivers/char/Kconfig
++++ b/drivers/char/Kconfig
+@@ -556,7 +556,7 @@ endmenu
+ 
+ config RANDOM_TRUST_CPU
+ 	bool "Trust the CPU manufacturer to initialize Linux's CRNG"
+-	depends on X86 || S390 || PPC
++	depends on X86 || S390 || PPC || ARM64
+ 	default n
+ 	help
+ 	Assume that CPU manufacturer (e.g., Intel or AMD for RDSEED or
+-- 
+2.17.2
+
