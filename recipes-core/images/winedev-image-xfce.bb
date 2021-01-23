@@ -104,8 +104,8 @@ modify_sudoers() {
 }
 ROOTFS_POSTPROCESS_COMMAND_append = " modify_sudoers;"
 
-# Ownership of .ssh folder
-modify_ssh_ownership() {
-    chown -R ${USER} ${IMAGE_ROOTFS}/home/${USER}/.ssh
+# Fix ownership of new user $HOME folder
+modify_user_home_ownership() {
+    chown -R ${USER}:${USER} ${IMAGE_ROOTFS}/home/${USER}
 }
-ROOTFS_POSTPROCESS_COMMAND_append = " modify_ssh_ownership;"
+ROOTFS_POSTPROCESS_COMMAND_append = " modify_user_home_ownership;"
