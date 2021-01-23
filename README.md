@@ -271,12 +271,25 @@ fusermount -u projects
 
 ### Wine environment
 
-Run wine:
+Run 64-bit Wine on 64-bit ARM:
 
 ```shell
-export DISPLAY=:0
 export PATH=$HOME/projects/wine/mainline-install-aarch64/bin/:$PATH
+
+# wipe existing prefix
+rm -rf ~/.wine
 wine64 --version
+wineboot
+```
+
+Run 32-bit Wine on 64-bit ARM:
+
+```shell
+export PATH=$HOME/projects/wine/mainline-install-arm/bin/:$PATH
+
+# wipe existing prefix
+rm -rf ~/.wine
+wine --version
 wineboot
 ```
 
