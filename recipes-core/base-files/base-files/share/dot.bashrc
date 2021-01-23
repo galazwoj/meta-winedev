@@ -19,6 +19,9 @@ then
 fi
 export PATH
 
+# Always set local display
+export DISPLAY=:0
+
 # Set a colored prompt if the terminal supports it
 case "$TERM" in
     xterm-color|*-256color)
