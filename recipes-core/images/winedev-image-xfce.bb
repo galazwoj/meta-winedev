@@ -104,6 +104,14 @@ modify_sudoers() {
 }
 ROOTFS_POSTPROCESS_COMMAND_append = " modify_sudoers;"
 
+# copy custom .bashrc and .profile to user $HOME folder
+copy_user_home_bashrc() {
+    install -m 0755 ${IMAGE_ROOTFS}${sysconfdir}/skel/.bashrc ${IMAGE_ROOTFS}/home/${USER}
+    # .profile to make .bashrc being sourced by login shells
+    install -m 0755 ${IMAGE_ROOTFS}${sysconfdir}/skel/.profile ${IMAGE_ROOTFS}/home/${USER}
+}
+ROOTFS_POSTPROCESS_COMMAND_append = " copy_user_home_bashrc;"
+
 # Fix ownership of new user $HOME folder
 modify_user_home_ownership() {
     chown -R ${USER}:${USER} ${IMAGE_ROOTFS}/home/${USER}
