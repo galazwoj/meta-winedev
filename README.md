@@ -100,6 +100,7 @@ Copy the keys into the `meta-winedev` layer at the following location:
 
 ```shell
 mkdir ../meta-winedev/recipes-common/ssh-keys/files/
+
 cp ~/.ssh/winedev* ../meta-winedev/recipes-common/ssh-keys/files/
 ```
 
@@ -152,7 +153,8 @@ Start Wine build process using the cross-toolchain environment.
 Example by using [buildwine.py script for building Wine with shared WoW64 support][7]:
 
 ```shell
-./buildwine.py --cross-compile-prefix=$CROSS_COMPILE --disable-mingw --enable-clang --clean --force-autoconf
+./buildwine.py --cross-compile-prefix=$CROSS_COMPILE \
+    --disable-mingw --enable-clang --clean --force-autoconf
 ```
 
 ## Flashing build artifacts
@@ -173,7 +175,8 @@ export ROOTFS_PART=/dev/mmcblk0p2
 Write boot partition disk (UEFI) image to block device:
 
 ```shell
-sudo dd if=tmp/deploy/images/hikey960/boot-hikey960.uefi.img of=$BOOT_PART bs=1M status=progress conv=fdatasync
+sudo dd if=tmp/deploy/images/hikey960/boot-hikey960.uefi.img \
+    of=$BOOT_PART bs=1M status=progress conv=fdatasync
 ```
 
 Write rootfs partition disk (ext4) image to block device:
@@ -211,6 +214,7 @@ Make sure the local user is part of `dialout` group to access serial devices wit
 
 ```shell
 sudo usermod -a -G dialout $USER
+
 sudo reboot
 ```
 
@@ -236,13 +240,15 @@ Add the previously generated SSH host key to the ssh-agent:
 
 ```shell
 eval "$(ssh-agent -s)"
+
 ssh-add ~/.ssh/winedev
 ```
 
 Now you can login using SSH without password:
 
 ```shell
-ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null $USER@192.168.7.2
+ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null \
+    $USER@192.168.7.2
 ```
 
 ### Mount host directories
@@ -252,7 +258,9 @@ the user and mapped base path should be the same for host and target.
 
 ```shell
 mkdir projects
-sshfs -o StrictHostKeyChecking=no -o idmap=user $USER@192.168.7.1:/home/$USER/projects $HOME/projects
+
+sshfs -o StrictHostKeyChecking=no -o idmap=user \
+    $USER@192.168.7.1:/home/$USER/projects $HOME/projects
 ```
 
 Unmount as needed:
@@ -321,7 +329,7 @@ in tree for individual recipes is under the LICENSE stated in each recipe
 * [openembedded-core: virglrenderer support for QEMU][6]
 * [buildwine.py script for building Wine with shared WoW64 support][7]
 * [96boards.org HiKey960 board support][8]
-  
+
 [//]: # (invisible, for link references)
 [1]: https://www.yoctoproject.org/
 [2]: https://www.yoctoproject.org/software-overview/
