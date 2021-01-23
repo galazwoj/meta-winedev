@@ -98,9 +98,9 @@ EXTRA_USERS_PARAMS += "\
 
 # uncomment the line %sudo ALL=(ALL) ALL in /etc/sudoers
 modify_sudoers() {
-    sed 's/# %sudo/%sudo/' < ${IMAGE_ROOTFS}/etc/sudoers > \
-        ${IMAGE_ROOTFS}/etc/sudoers.tmp
-    mv ${IMAGE_ROOTFS}/etc/sudoers.tmp ${IMAGE_ROOTFS}/etc/sudoers
+    sed 's/# %sudo/%sudo/' < ${IMAGE_ROOTFS}${sysconfdir}/sudoers > \
+        ${IMAGE_ROOTFS}${sysconfdir}/sudoers.tmp
+    mv ${IMAGE_ROOTFS}${sysconfdir}/sudoers.tmp ${IMAGE_ROOTFS}${sysconfdir}/sudoers
 }
 ROOTFS_POSTPROCESS_COMMAND_append = " modify_sudoers;"
 
