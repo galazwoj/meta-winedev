@@ -4,6 +4,8 @@ DESCRIPTION = "Winedev image with minimal XFCE install"
 LICENSE = "MIT"
 
 IMAGE_BASENAME = "${PN}"
+DISTRO_FEATURES = "x11 pam"
+REQUIRED_DISTRO_FEATURES = "x11 pam"
 
 IMAGE_FEATURES += " \
     debug-tweaks \
@@ -42,8 +44,9 @@ IMAGE_INSTALL += " \
     usbutils \
     ltrace \
     glmark2 \
-    xscreensaver \
     "
+#    xscreensaver \
+#    "
 
 # for multilib SDK (32-bit + 64-bit) targeting Wine devel
 IMAGE_INSTALL += " \
@@ -102,7 +105,7 @@ modify_sudoers() {
         ${IMAGE_ROOTFS}${sysconfdir}/sudoers.tmp
     mv ${IMAGE_ROOTFS}${sysconfdir}/sudoers.tmp ${IMAGE_ROOTFS}${sysconfdir}/sudoers
 }
-ROOTFS_POSTPROCESS_COMMAND_append = " modify_sudoers;"
+ROOTFS_POSTPROCESS_COMMAND:append = " modify_sudoers;"
 
 # copy custom .bashrc and .profile to user $HOME folder
 copy_user_home_bashrc() {
@@ -110,10 +113,10 @@ copy_user_home_bashrc() {
     # .profile to make .bashrc being sourced by login shells
     install -m 0755 ${IMAGE_ROOTFS}${sysconfdir}/skel/.profile ${IMAGE_ROOTFS}/home/${USER}
 }
-ROOTFS_POSTPROCESS_COMMAND_append = " copy_user_home_bashrc;"
+ROOTFS_POSTPROCESS_COMMAND:append = " copy_user_home_bashrc;"
 
 # Fix ownership of new user $HOME folder
 modify_user_home_ownership() {
     chown -R ${USER}:${USER} ${IMAGE_ROOTFS}/home/${USER}
 }
-ROOTFS_POSTPROCESS_COMMAND_append = " modify_user_home_ownership;"
+ROOTFS_POSTPROCESS_COMMAND:append = " modify_user_home_ownership;"
