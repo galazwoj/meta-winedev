@@ -25,8 +25,8 @@ do_install() {
 
 PACKAGES += "${PN}-client ${PN}-server"
 
-FILES_${PN}-client += "/home/${USER}/.ssh/id_rsa.pub /home/${USER}/.ssh/id_rsa"
-FILES_${PN}-server += "/home/${USER}/.ssh/authorized_keys"
+FILES:${PN}-client += "/home/${USER}/.ssh/id_rsa.pub /home/${USER}/.ssh/id_rsa"
+FILES:${PN}-server += "/home/${USER}/.ssh/authorized_keys"
 
 do_patch[noexec] = "1"
 do_configure[noexec] = "1"

@@ -9,4 +9,4 @@
 
 inherit multilib_script
 
-MULTILIB_SCRIPTS = "gcc-symlinks:${bindir}/gcc cpp-symlinks:${bindir}/cpp g++-symlinks:${bindir}/g++"
+# MULTILIB_SCRIPTS = "gcc-symlinks:${bindir}/gcc cpp-symlinks:${bindir}/cpp g++-symlinks:${bindir}/g++"
