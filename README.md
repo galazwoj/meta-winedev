@@ -9,24 +9,24 @@ For an introduction to the Yocto project have a look here:
 
 Compatibility with [Yocto releases][4]:
 
-* Dunfell (3.1)
+* Nanbield (4.3)
 
 Supported target architectures/platforms:
 
 * ARMv8 QEMU machine with virtio and virgl support using [Virgil 3D GPU project][5]
-* ARMv8 HiKey960 SoC [96boards.org HiKey960 board support][8]
+* ~~ARMv8 HiKey960 SoC [96boards.org HiKey960 board support][8]~~
 
 Features:
 
 * X11/XFCE target image with full 64-bit and 32-bit multi-lib support (aarch64 + armv7)
-* Yocto SDK containing GCC 9.x and Clang 10.x toolchains for aarch64 and armv7hf with full 64-bit and 32-bit multi-lib support
+* Yocto SDK containing GCC 13.2 and Clang 17.0 toolchains for aarch64 and armv7hf with full 64-bit and 32-bit multi-lib support
 
 ## System requirements
 
 Typical disk space usage for multilib/bi-arch image target `winedev-image-xfce`, `MACHINE=hikey960`
 
 * DL_DIR (tarball downloads): 10G
-* Yocto build directory including Yocto SDK (cross-toolchain): 236G
+* Yocto build directory including Yocto SDK (cross-toolchain): 280G
 * Yocto SDK (cross-toolchain) installed: 25G
 
 ## Set up development workspace
@@ -34,30 +34,30 @@ Typical disk space usage for multilib/bi-arch image target `winedev-image-xfce`,
 Clone Yocto and required layers:
 
 ```shell
-git clone -b dunfell git://git.yoctoproject.org/poky.git
+git clone -b nanbield git://git.yoctoproject.org/poky.git
 cd poky
-git clone -b dunfell git://git.openembedded.org/meta-openembedded.git
-git clone -b dunfell https://github.com/rmi1974/meta-winedev.git
+git clone -b nanbield git://git.openembedded.org/meta-openembedded.git
+git clone -b nanbield https://github.com/rmi1974/meta-winedev.git
 git clone -b master git://github.com/kraj/meta-clang.git
 ```
 
-Optional HiKey960 Board support:
+<!--Optional HiKey960 Board support: -->
+<!-- -->
+<!--```shell -->
+<!--git clone -b dunfell https://github.com/96boards/meta-96boards.git -->
+<!--# edk2-hikey960 fork requires Python 2.x -->
+<!--git clone -b dunfell git://git.openembedded.org/meta-python2.git -->
+<!--``` -->
 
-```shell
-git clone -b dunfell https://github.com/96boards/meta-96boards.git
-# edk2-hikey960 fork requires Python 2.x
-git clone -b dunfell git://git.openembedded.org/meta-python2.git
-```
-
-Source one of the scripts to initialize BitBake environment (`MACHINE`, `DISTRO` and `IMAGE` variables):
+Source the script to initialize BitBake environment (`MACHINE`, `DISTRO` and `IMAGE` variables):
 
 ```shell
 # for QEMU ARM64
 source meta-winedev/scripts/winedev-image-xfce-qemuarm64.env
-
-# for HiKey960 Board
-source meta-winedev/scripts/winedev-image-xfce-hikey960.env
 ```
+<!--# for HiKey960 Board -->
+<!--source meta-winedev/scripts/winedev-image-xfce-hikey960.env -->
+
 
 NOTE: The above script sources `oe-init-build-env` as well.
 
@@ -77,13 +77,13 @@ bitbake-layers add-layer \
     ../meta-clang
 ```
 
-Optional HiKey960 Board support:
-
-```shell
-bitbake-layers add-layer \
-    ../meta-96boards \
-    ../meta-python2
-```
+<!--Optional HiKey960 Board support: -->
+<!--  -->
+<!--```shell -->
+<!--bitbake-layers add-layer \ -->
+<!--    ../meta-96boards \ -->
+<!--    ../meta-python2 -->
+<!--``` -->
 
 ## Host and Target authentication prerequisite
 
@@ -157,70 +157,8 @@ Example by using [buildwine.py script for building Wine with shared WoW64 suppor
     --disable-mingw --enable-clang --clean --force-autoconf
 ```
 
-## Flashing build artifacts
-
-If real hardware is used you need to flash the generated artifacts to the target storage (eMMC, SD-card, ...).
-
-### Hikey960 board support
-
-Prepare an SD-Card as follows:
-
-Export some environment vars for convenience in shell as follow-up commands reference it:
-
-```shell
-export BOOT_PART=/dev/mmcblk0p1
-export ROOTFS_PART=/dev/mmcblk0p2
-```
-
-Write boot partition disk (UEFI) image to block device:
-
-```shell
-sudo dd if=tmp/deploy/images/hikey960/boot-hikey960.uefi.img \
-    of=$BOOT_PART bs=1M status=progress conv=fdatasync
-```
-
-Write rootfs partition disk (ext4) image to block device:
-
-```shell
-gunzip < tmp/deploy/images/hikey960/winedev-image-xfce-hikey960.ext4.gz | \
-    sudo dd of=$ROOTFS_PART bs=1M status=progress conv=fdatasync
-```
-
-or use the rootfs tarball extract method (a bit faster):
-
-```shell
-# Format the rootfs partition as 'ext4' and label it 'rootfs'
-sudo mkfs.ext4 -F -m 0 -L rootfs $ROOTFS_PART
-
-# Mount the target rootfs
-udisksctl mount -b $ROOTFS_PART
-
-# Unpack the rootfs tarball contents to mounted fs
-# NOTE: You will need 'pv' tool installed with your host distro for progress indicator
-ROOTFS_MOUNTPOINT=$(lsblk -nro MOUNTPOINT $ROOTFS_PART)
-
-pv winedev-image-xfce-hikey960.tar.gz | sudo tar xpzf - -C $ROOTFS_MOUNTPOINT
-
-# Unmount the target rootfs
-udisksctl unmount -b $ROOTFS_PART
-```
 
 ## Run the target and set up Wine
-
-### Hikey960 board support
-
-Start the terminal app and power cycle the board.
-Make sure the local user is part of `dialout` group to access serial devices without root:
-
-```shell
-sudo usermod -a -G dialout $USER
-
-sudo reboot
-```
-
-```shell
-picocom /dev/ttyUSB0 -b 115200 -f x
-```
 
 ### QEMU
 
@@ -232,9 +170,11 @@ runqemu
 
 ### Login
 
-By default, the target login user is the current host user `$USER` (password equals username).
+By default, the target login user is the current host user `$USER` (password mypass).
 The host user `$USER` was automatically added during the build step (the user BitBake was running under).
 See [recipes-core/images/winedev-image-xfce.bb](recipes-core/images/winedev-image-xfce.bb) for details.
+
+The root user is available as well, its password is root.
 
 Add the previously generated SSH host key to the ssh-agent:
 
