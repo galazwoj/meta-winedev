@@ -4,8 +4,13 @@ DESCRIPTION = "Winedev image with minimal XFCE install"
 LICENSE = "MIT"
 
 IMAGE_BASENAME = "${PN}"
-DISTRO_FEATURES = "x11 pam"
-REQUIRED_DISTRO_FEATURES = "x11 pam"
+DISTRO_FEATURES += "x11" 
+DISTRO_FEATURES += "x11 pam"
+DISTRO_FEATURES += "ptest"
+DISTRO_FEATURES += "opengl"
+
+#REQUIRED_DISTRO_FEATURES = "x11"
+#REQUIRED_DISTRO_FEATURES += "pam"
 
 IMAGE_FEATURES += " \
     debug-tweaks \
@@ -44,9 +49,8 @@ IMAGE_INSTALL += " \
     usbutils \
     ltrace \
     glmark2 \
+    xscreensaver \
     "
-#    xscreensaver \
-#    "
 
 # for multilib SDK (32-bit + 64-bit) targeting Wine devel
 IMAGE_INSTALL += " \
@@ -81,15 +85,23 @@ IMAGE_INSTALL += " \
 inherit extrausers
 
 # Reset root password to 'root'
-EXTRA_USERS_PARAMS += "\
-    usermod -P root root; \
-    "
+# See https://docs.yoctoproject.org/singleindex.html#extrausers-bbclass
+# We set a default password of root to match our busybox instance setup
+# Don't do this in a production image
+# ROOT_PASSWD below is set to the output of
+# printf "%q" $(mkpasswd -m sha256crypt root) to hash the "root" password
+# string
+ROOT_PASSWD = "\$5\$2WoxjAdaC2\$l4aj6Is.EWkD72Vt.byhM5qRtF9HcCM/5YpbxpmvNB5"
+EXTRA_USERS_PARAMS += "usermod -p '${ROOT_PASSWD}' root;"
 
 # Add current host user to the target system
+# USER_PASSWD below is set to the output of
+# printf "%q" $(mkpasswd -m sha256crypt mypass) to hash the "$USER" password
+# string
+USER_PASSWD = "\$5\$oy3x6RC2DyjCks86$pIQ6y3k5GTyVbmkNHqIel8Qjf2MTX/ReN6b8ZayQ482"
 EXTRA_USERS_PARAMS += "\
-    useradd -P ${USER} ${USER}; \
+    useradd -p '${USER_PASSWD}' ${USER}; \
     "
-
 # Provide user account sudoer privileges by default
 EXTRA_USERS_PARAMS += "\
     usermod -a -G sudo ${USER}; \
