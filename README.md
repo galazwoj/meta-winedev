@@ -23,7 +23,7 @@ Features:
 
 ## System requirements
 
-Typical disk space usage for multilib/bi-arch image target `winedev-image-xfce`, `MACHINE=hikey960`
+Typical disk space usage for multilib/bi-arch image target `winedev-image-xfce`, `MACHINE=qemuarm64`
 
 * DL_DIR (tarball downloads): 10G
 * Yocto build directory including Yocto SDK (cross-toolchain): 280G
@@ -34,11 +34,11 @@ Typical disk space usage for multilib/bi-arch image target `winedev-image-xfce`,
 Clone Yocto and required layers:
 
 ```shell
-git clone -b nanbield git://git.yoctoproject.org/poky.git
+git clone -b nanbield https://git.yoctoproject.org/poky.git
 cd poky
-git clone -b nanbield git://git.openembedded.org/meta-openembedded.git
+git clone -b nanbield https://git.openembedded.org/meta-openembedded.git
 git clone -b nanbield https://github.com/rmi1974/meta-winedev.git
-git clone -b master git://github.com/kraj/meta-clang.git
+git clone -b master https://github.com/kraj/meta-clang.git
 ```
 
 <!--Optional HiKey960 Board support: -->
@@ -46,7 +46,7 @@ git clone -b master git://github.com/kraj/meta-clang.git
 <!--```shell -->
 <!--git clone -b dunfell https://github.com/96boards/meta-96boards.git -->
 <!--# edk2-hikey960 fork requires Python 2.x -->
-<!--git clone -b dunfell git://git.openembedded.org/meta-python2.git -->
+<!--git clone -b dunfell https://git.openembedded.org/meta-python2.git -->
 <!--``` -->
 
 Source the script to initialize BitBake environment (`MACHINE`, `DISTRO` and `IMAGE` variables):
