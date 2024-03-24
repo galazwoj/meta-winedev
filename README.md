@@ -37,7 +37,7 @@ Clone Yocto and required layers:
 git clone -b nanbield https://git.yoctoproject.org/poky.git
 cd poky
 git clone -b nanbield https://git.openembedded.org/meta-openembedded.git
-git clone -b nanbield https://github.com/rmi1974/meta-winedev.git
+git clone -b nanbield  https://github.com/galazwoj/meta-winedev
 git clone -b master https://github.com/kraj/meta-clang.git
 ```
 
